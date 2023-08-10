@@ -1,84 +1,33 @@
 import React, { useState } from "react";
 import styles from "./InvestmentInput.module.css";
 
+const initialUserInput = {
+  currentSavings: 10000,
+  yearlyContribution: 1200,
+  expectedReturn: 7,
+  duration: 10,
+};
+
 const InvestmentInput = (props) => {
-  const [enteredCurrentSavings, setCurrentSavings] = useState("");
-  const [enteredYearlyContribution, setYearlyContribution] = useState("");
-  const [enteredExpectedReturn, setExpectedReturn] = useState("");
-  const [enteredDuration, setDuration] = useState("");
+  const [userInput, setUserInput] = useState(initialUserInput);
 
-  const [isCurrentSavingsValid, setIsCurrentSavingsValid] = useState(true);
-  const [isYearlyContributionValid, setYearlyContributionValid] =
-    useState(true);
-  const [isExpectedReturnValid, setIsExpectedReturnValid] = useState(true);
-  const [isDurationValid, setIsDurationValid] = useState(true);
-
-  //   const currentSavingsHandler = (event) => {
-  //     setCurrentSavings(event.target.value);
-  //   };
-  //   const yearlyContributionHandler = (event) => {
-  //     setYearlyContribution(event.target.value);
-  //   };
-  //   const expectedReturnHandler = (event) => {
-  //     setExpectedReturn(event.target.value);
-  //   };
-  //   const durationHandler = (event) => {
-  //     setDuration(event.target.value);
-  //   };
-
-  const inputChangeHandler = (identifier, value) => {
-    // if (value.trim().length() > 0) {
-    //   setIsValid(true);
-    // }
-    if (identifier === "currentSaving") {
-      setCurrentSavings(value);
-    } else if (identifier === "yearlyContribution") {
-      setYearlyContribution(value);
-    } else if (identifier === "expectedReturn") {
-      setExpectedReturn(value);
-    } else {
-      setDuration(value);
-    }
+  const inputChangeHandler = (input, value) => {
+    setUserInput((prevInput) => {
+      return {
+        ...prevInput,
+        [input]: value,
+      };
+    });
   };
 
   const resetHandler = () => {
-    setCurrentSavings("");
-    setYearlyContribution("");
-    setExpectedReturn("");
-    setDuration("");
+    setUserInput(initialUserInput);
   };
 
   const submitHandler = (event) => {
     event.preventDefault();
 
-    setIsCurrentSavingsValid(true);
-    setYearlyContributionValid(true);
-    setIsExpectedReturnValid(true);
-    setIsDurationValid(true);
-
-    if (enteredCurrentSavings.trim().length === 0) {
-      setIsCurrentSavingsValid(false);
-      return;
-    }
-    if (enteredYearlyContribution.trim().length === 0) {
-      setYearlyContributionValid(false);
-      return;
-    }
-    if (enteredExpectedReturn.trim().length === 0) {
-      setIsExpectedReturnValid(false);
-      return;
-    }
-    if (enteredDuration.trim().length === 0) {
-      setIsDurationValid(false);
-      return;
-    }
-
-    props.onCalculate({
-      "current-savings": enteredCurrentSavings,
-      "yearly-contribution": enteredYearlyContribution,
-      "expected-return": enteredExpectedReturn,
-      duration: enteredDuration,
-    });
+    props.onCalculate(userInput);
   };
 
   return (
@@ -91,13 +40,9 @@ const InvestmentInput = (props) => {
               type="number"
               id="current-savings"
               onChange={(event) => {
-                inputChangeHandler("currentSaving", event.target.value);
+                inputChangeHandler("currentSavings", event.target.value);
               }}
-              style={{
-                backgroundColor: isCurrentSavingsValid
-                  ? "transparent"
-                  : "salmon",
-              }}
+              value={userInput["currentSavings"]}
             />
           </p>
           <p>
@@ -108,11 +53,7 @@ const InvestmentInput = (props) => {
               onChange={(event) => {
                 inputChangeHandler("yearlyContribution", event.target.value);
               }}
-              style={{
-                backgroundColor: isYearlyContributionValid
-                  ? "transparent"
-                  : "salmon",
-              }}
+              value={userInput["yearlyContribution"]}
             />
           </p>
         </div>
@@ -127,11 +68,7 @@ const InvestmentInput = (props) => {
               onChange={(event) => {
                 inputChangeHandler("expectedReturn", event.target.value);
               }}
-              style={{
-                backgroundColor: isExpectedReturnValid
-                  ? "transparent"
-                  : "salmon",
-              }}
+              value={userInput["expectedReturn"]}
             />
           </p>
           <p>
@@ -142,9 +79,7 @@ const InvestmentInput = (props) => {
               onChange={(event) => {
                 inputChangeHandler("duration", event.target.value);
               }}
-              style={{
-                backgroundColor: isDurationValid ? "transparent" : "salmon",
-              }}
+              value={userInput["duration"]}
             />
           </p>
         </div>

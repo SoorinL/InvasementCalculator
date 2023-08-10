@@ -1,6 +1,12 @@
 import React from "react";
-import ResultItem from "../ResultItem/ResultItem";
 import styles from "./ResultList.module.css";
+
+const formatter = new Intl.NumberFormat("en-US", {
+  style: "currency",
+  currency: "USD",
+  minimumFractionDigits: 2,
+  maximumFractionDigits: 2,
+});
 
 const ResultList = (props) => {
   console.log("ResultList안:", props);
@@ -17,15 +23,25 @@ const ResultList = (props) => {
         </tr>
       </thead>
       <tbody>
-        {props.items.map((resultData) => (
-          <ResultItem
-            key={resultData.id}
-            year={resultData.year}
-            totalSavings={resultData.savingsEndOfYear}
-            interest={resultData.yearlyInterest}
-            totalInterest={resultData.totalInterest}
-            investedCapital={resultData.investedCapital}
-          />
+        {props.items.map((yearData) => (
+          <tr key={yearData.year}>
+            <td>{yearData.year}</td>
+            <td>{formatter.format(yearData.savingsEndOfYear)}</td>
+            <td>{formatter.format(yearData.yearlyInterest)}</td>
+            <td>
+              {formatter.format(
+                yearData.savingsEndOfYear -
+                  props.initialInvestment -
+                  yearData.yearlyContribution * yearData.year
+              )}
+            </td>
+            <td>
+              {formatter.format(
+                props.initialInvestment +
+                  yearData.yearlyContribution * yearData.year
+              )}
+            </td>
+          </tr>
         ))}
       </tbody>
     </table>
